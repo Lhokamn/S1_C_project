@@ -37,3 +37,8 @@ int lecture(void)
     fclose(fichier);
     return EXIT_SUCCESS;
 }
+
+int ajout_client(char Prenom, char Nom, char Ville, char code_postal, char num_telephone)
+{
+
+}
