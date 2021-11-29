@@ -2,28 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 #define chemin "../test_a_detruire.csv"
-#define MAX_LENGTH 30000
+#define MAX_LENGTH 5000
 
 //lire un fichier csv ligne par ligne avec fgets et le diviseurs avec strtok
 
-void test_fichier()
+int test_fichier(void)
 {
-    char ligne[MAX_LENGTH];
-
-    char *token; //Contiendra les différents champ de chaque ligne après tokenization
-
     FILE *fichier=fopen(chemin,"r");
 
     if (fichier==NULL)
     {
         printf("Echec ouverture fichier\n");
-        exit (EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
+    return EXIT_SUCCESS;
 }
 
 int lecture(void)
 {
-    test_fichier();
+    if (test_fichier()==EXIT_FAILURE)
+        return EXIT_FAILURE;
+
+    char ligne[MAX_LENGTH];
+    char *token; //Contiendra les différents champ de chaque ligne après tokenization
+    FILE *fichier=fopen(chemin,"r");
 
     while (fgets(ligne,MAX_LENGTH,fichier))
     {
@@ -42,20 +44,26 @@ int lecture(void)
 }
 
 int recuperation(char attribut_rechercher)
-{
-    switch (attribut_rechercher)
+{   
+    if (attribut_rechercher=='Nom')
     {
-        case 1:
-        //pour récupérer les prénoms
-        break;
-        case 2:
-        //pour récupérer les noms
-        break;
-        case 3:
-        //pour récupérer les code postal
-        break;
-        case 4:
-        //pour récupérer les profession
-
+        attribut_rechercher==1;
     }
+    else if (attribut_rechercher=='Prénom')
+    {
+        attribut_rechercher==2;
+    }
+    else if (attribut_rechercher=='Profession')
+    {
+        attribut_rechercher==3;
+    }
+    else if (attribut_rechercher=='code_postal')
+    {
+        attribut_rechercher==4;
+    }   
+    else
+    {
+        printf("Le caractère choisi n'existe pas ou est mal orthographié. \nMerci d'essayer 'Nom', 'Prénom', 'Profession', 'code_postal'")
+        return EXIT_FAILURE;
+    }    
 }
