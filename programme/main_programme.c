@@ -10,13 +10,17 @@ int main(void)
     switch(scanf("%c",&choix)) {
 
         case choix='1':
+            system("cls");
+            printf("Lecture du fichier \n ");
             lecture();
         break;
         case choix ='2':
-
+            system("cls");
+            printf("Modifier le tableau");
         break;
         default:
         printf("Erreur: Fin système");
+        return void;
     }
     return 0;
 }
