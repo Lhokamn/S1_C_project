@@ -4,7 +4,33 @@
 #define chemin "../test_a_detruire.csv"
 #define MAX_LENGTH 5000
 
-//lire un fichier csv ligne par ligne avec fgets et le diviseurs avec strtok
+void menu(void)
+{
+    int menu=0;
+    while (menu!=5)
+        printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3)recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme");
+        scanf(&menu);
+        if (menu==1)
+        {
+            //
+        }
+        else if (menu==2)
+        {
+            //
+        }
+        else if (menu==3)
+        {
+            //
+        }
+        else if (menu==4)
+        {
+            //
+        }
+        else
+        {
+            printf("Commande non valide")
+        }
+}
 
 int test_fichier(void)
 {
@@ -43,27 +69,12 @@ int lecture(void)
     return EXIT_SUCCESS;
 }
 
-int recuperation(char attribut_rechercher)
-{   
-    if (attribut_rechercher=='Nom')
-    {
-        attribut_rechercher==1;
-    }
-    else if (attribut_rechercher=='Prénom')
-    {
-        attribut_rechercher==2;
-    }
-    else if (attribut_rechercher=='Profession')
-    {
-        attribut_rechercher==3;
-    }
-    else if (attribut_rechercher=='code_postal')
-    {
-        attribut_rechercher==4;
-    }   
+int transformation_CSV_tableau(int ligne, int colonne)
+{
+    if (test_fichier()==EXIT_FAILURE)
+        return EXIT_FAILURE;
     else
     {
-        printf("Le caractère choisi n'existe pas ou est mal orthographié. \nMerci d'essayer 'Nom', 'Prénom', 'Profession', 'code_postal'")
-        return EXIT_FAILURE;
+        
     }    
 }

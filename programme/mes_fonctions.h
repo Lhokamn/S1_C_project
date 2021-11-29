@@ -1,1 +1,1 @@
-int lecture(void);
+void menu(void);
