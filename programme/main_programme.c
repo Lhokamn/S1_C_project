@@ -17,12 +17,22 @@ int main(void)
     }
 
     struct Personne donnees[MAX_LENGTH];
+
+    int compteur_ligne=0;
     
     while(fgets !=NULL)
     {
-        
+        donnees[compteur_ligne].prenom,"fgets(chemin,'r')";
+        donnees[compteur_ligne].nom,"fgets(chemin,'r')";
+        donnees[compteur_ligne].ville,"fgets(chemin,'r')";
+        donnees[compteur_ligne].code_postal,"fgets(chemin,'r')";
+        donnees[compteur_ligne].telephone,"fgets(chemin,'r')";
+        donnees[compteur_ligne].mail,"fgets(chemin,'r')";
+        donnees[compteur_ligne].metier,"fgets(chemin,'r')";
+        compteur_ligne++;
     }
     // menu(tableau_CSV, ligne_tableau, colonne_tableau);
+    fclose(fichier);
     printf("Au revoir !");
     return 0;
 }
