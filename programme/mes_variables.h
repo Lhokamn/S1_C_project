@@ -5,11 +5,11 @@
 
 struct Personne
 {
-    char *prenom;
-    char *nom;
-    char *ville;
-    char *code_postal;
-    char *telephone;
-    char *mail;
-    char *metier;
+    char prenom[45];
+    char nom[45];
+    char ville[45];
+    char code_postal[6];
+    char telephone[10];
+    char mail[60];
+    char metier[50];
 };
