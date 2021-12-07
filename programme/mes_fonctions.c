@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mes_variables.h"
 
 // int caracteristique_insertion(char tableau_CSV, int ligne_tableau, int colonne_tableau)
 // {
@@ -47,7 +48,7 @@
 //     while (menu!=5)
 //         printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3)recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme");
 //         scanf("%d",&menu);
-//         if (menu==1)
+//         case 1()
 //         {
 //             caracteristique_insertion(tableau_CSV, ligne_tableau, colonne_tableau);
 //         }
@@ -65,10 +66,25 @@
 //         }
 //         else if (menu==5)
 //         {
-//             //
+//             return EXIT_SUCCES;
 //         }
 //         else
 //         {
 //             printf("Commande non valide");
 //         }
 // }
+
+struct Personne creation_structure_personne(char* str)
+{
+    FILE *fichier=fopen(chemin,"r");
+    char ligne[MAX_LENGTH];
+
+    char tmp;
+
+    int indice_ligne=0;
+    while (str[i]!=",")
+    {
+        tmp=tmp+str[i];
+        
+    }
+}

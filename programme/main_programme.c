@@ -16,21 +16,11 @@ int main(void)
         return EXIT_FAILURE;
     }
 
-    struct Personne donnees[MAX_LENGTH];
-
-    int compteur_ligne=0;
-    
-    while(fgets !=NULL)
+    do
     {
-        donnees[compteur_ligne].prenom,"fgets(chemin,'r')";
-        donnees[compteur_ligne].nom,"fgets(chemin,'r')";
-        donnees[compteur_ligne].ville,"fgets(chemin,'r')";
-        donnees[compteur_ligne].code_postal,"fgets(chemin,'r')";
-        donnees[compteur_ligne].telephone,"fgets(chemin,'r')";
-        donnees[compteur_ligne].mail,"fgets(chemin,'r')";
-        donnees[compteur_ligne].metier,"fgets(chemin,'r')";
-        compteur_ligne++;
-    }
+        creation_structure_personne(fgets(ligne, MAX_LENGTH,fichier));
+    }while (fread!=NULL);
+    
     // menu(tableau_CSV, ligne_tableau, colonne_tableau);
     fclose(fichier);
     printf("Au revoir !");
