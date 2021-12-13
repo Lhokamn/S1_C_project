@@ -42,43 +42,40 @@
 // }
 
 
-// void menu(char tableau_CSV, int ligne_tableau, int colonne_tableau)
-// {
-//     int menu=0;
-//     while (menu!=5)
-//         printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3)recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme");
-//         scanf("%d",&menu);
-//         case 1()
-//         {
-//             caracteristique_insertion(tableau_CSV, ligne_tableau, colonne_tableau);
-//         }
-//         else if (menu==2)
-//         {
-//             //
-//         }
-//         else if (menu==3)
-//         {
-//             //
-//         }
-//         else if (menu==4)
-//         {
-//             //
-//         }
-//         else if (menu==5)
-//         {
-//             return EXIT_SUCCES;
-//         }
-//         else
-//         {
-//             printf("Commande non valide");
-//         }
-// }
+int menu(void)
+{
+    int menu=0;
+    while (menu!=5)
+	{
+        printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3)recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme \n");
+        scanf("%d",&menu);
+        switch (menu)
+		{
+			case 1:
+				/* code */
+				break;
+			case 2:
+				/* code */
+				break;
+			case 3:
+				/* code */
+				break;
+			case 4:
+				/* code */
+				break;
+			case 5:
+				return EXIT_SUCCESS;
+			default:
+				break;
+		}
+	}
+}
 
 
 void remplissage_tableau(void)
 {
 	FILE *fichier = fopen(chemin,"r");
-    char longueur_ligne=[taille_ligne];
+    char longueur_ligne[taille_ligne];
     char *token;
     int champ_actuel = 0;
 	int t=0;
@@ -91,12 +88,9 @@ void remplissage_tableau(void)
 	    while( (token = strsep(&copie_ligne, ",")) != NULL)
 	    {
 		    /* note the trailing field will contain newline. */
-		    if(*token == '\n')
-		    {
-		    	printf("element %d = -Saut de ligne-\n", champ_actuel);//continue;
+		    if(*token == '\n'){
 		    }
 		    else if(token == NULL){
-		    	printf("element %d = -Champ vide-\n", champ_actuel);
 		    }
 		    else{
 			
@@ -132,4 +126,5 @@ void remplissage_tableau(void)
 	    }
 	    t++;
 	}
+	fclose(fichier);
 }
