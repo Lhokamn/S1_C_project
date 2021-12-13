@@ -3,44 +3,6 @@
 #include <string.h>
 #include "mes_variables.h"
 
-// int caracteristique_insertion(char tableau_CSV, int ligne_tableau, int colonne_tableau)
-// {
-//     int insertion;
-//     printf("1) Vous voulez insérer un élément à une personne \n2)Voulez insérer toutes les caractéristiques d'une personne");
-//     scanf("%d",&insertion);
-//     if (insertion==1)
-//     {
-//         int contenance_element;
-//         int nom_personne;
-//         printf("donnez en premier lieu l'élément à ajouter, puis le nom de la personne");
-//         scanf("%d %d",&contenance_element,&nom_personne);
-
-//     }
-//     else if (insertion==2)
-//     {
-//         int nb_personne_a_rajouter;
-//         int i=0;
-//         printf("Combien de personne voulez vous ajouter ?");
-//         while (i<nb_personne_a_rajouter)
-//         {
-//             scanf("%d",&nb_personne_a_rajouter);
-//             char Nom;
-//             char Prenom;
-//             char Ville;
-//             char code_postal;
-//             char n_telephone;
-//             char adresse_mail;
-//             char metier;
-
-//             printf("Donnez le nom de la personne à rajouter");
-//             scanf("%c",&Nom);
-//             insertion_personne(tableau_CSV, ligne_tableau, colonne_tableau, Nom);
-//         }
-        
-
-//     }
-// }
-
 
 int menu(void)
 {
@@ -71,17 +33,72 @@ int menu(void)
 	}
 }
 
+void tri_bulle(char tableau[taille_tableau],int indice)
+{
+	int j=0;
+	int tmp;
+	while (j<taille_tableau)
+	{
+		int k=0;
+		while (k<taille_ligne)
+		{
+			if (tableau[j]<tableau[k])
+			{
+				tmp=tableau[j];
+				tableau[j]=tableau[k];
+				tableau[k]=tmp;
+			}
+			k++;
+		}
+		j++;
+	}
+}
+
+
+tri_tableau()
+{
+	int indice=1;
+	char tableau_prenom=taille_tableau;
+	char tableau_ville=taille_tableau;
+	char tableau_code_postal=taille_tableau;
+	char tableau_telephone=taille_tableau;
+	char tableau_mail=taille_tableau;
+	char tableau_metier=taille_tableau;
+	while (indice<7)
+		switch (indice)
+		{
+		case 1:
+			tri_bulle(tableau_prenom,indice);
+			break;
+		case 2:
+			tri_bulle(tableau_ville,indice);
+			break;
+		case 3:
+			tri_bulle(tableau_code_postal,indice);
+			break;
+		case 4:
+			tri_bulle(tableau_telephone,indice);
+			break;
+		case 5:
+			tri_bulle(tableau_mail,indice);
+			break;
+		case 6:
+			tri_bulle(tableau_metier,indice);
+			break;
+		default:
+			break;
+		}
+}
+
 
 void remplissage_tableau(void)
 {
 	FILE *fichier = fopen(chemin,"r");
     char longueur_ligne[taille_ligne];
     char *token;
-    int champ_actuel = 0;
 	int t=0;
 	while( fgets(longueur_ligne, taille_ligne, fichier) != NULL)
 	{
-	    champ_actuel = 0;
 		Personne client[taille_tableau];
 	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
@@ -93,38 +110,42 @@ void remplissage_tableau(void)
 		    else if(token == NULL){
 		    }
 		    else{
-			
-		    	if(champ_actuel ==0 ){//nom
+				switch (t)
+				{
+				case 0:
+					//nom
 					strcpy(client[t].nom,token);
-		    	}
-		    	else if(champ_actuel==1)
-	            {//prenom
+					break;
+				case 1:
+					//prenom
 					strcpy(client[t].prenom,token);
-		    	}
-				else if(champ_actuel==2)
-	            {//ville
+					break;
+				case 2:
+					//ville
 		    	    strcpy(client[t].ville,token);
-		    	}
-	            else if(champ_actuel==3)
-	            {//code postal
+					break;
+				case 3:
+					//code postal
 		    	    strcpy(client[t].code_postal,token);
-		    	}
-	            else if(champ_actuel==4)
-	            {//telephone
+					break;
+				case 4:
+					//telephone
 		    	    strcpy(client[t].telephone,token);
-		    	}
-	            else if(champ_actuel==5)
-	            {//mail
+					break;	
+				case 5:
+					//mail
 		    	    strcpy(client[t].mail,token);
-		    	}
-	            else if(champ_actuel==6)
-	            {//metier
+					break;
+				case 6:
+					//metier
 		    	    strcpy(client[t].metier,token);
-		    	}
+					break;			
+				default:
+					break;
+				}
 		    }
-		    champ_actuel++;
-	    }
-	    t++;
+			t++;
+	    } 
 	}
 	fclose(fichier);
 }

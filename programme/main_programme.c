@@ -13,6 +13,9 @@ int main(void)
     }
     fclose(fichier);
     remplissage_tableau();
+
+    tri_tableau();
+
     menu();
     printf("Au revoir !");
     return 0;
