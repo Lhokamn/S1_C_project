@@ -82,9 +82,10 @@ struct Personne creation_structure_personne(char* str)
     char tmp;
 
     int indice_ligne=0;
-    while (str[i]!=",")
+    int indice_virgule=0;
+    while (str[indice_ligne]!=",")
     {
-        tmp=tmp+str[i];
+        tmp=tmp+str[indice_ligne];
         
     }
 }
