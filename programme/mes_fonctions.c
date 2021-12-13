@@ -74,18 +74,62 @@
 //         }
 // }
 
-struct Personne creation_structure_personne(char* str)
+
+void remplissage_tableau(void)
 {
-    FILE *fichier=fopen(chemin,"r");
-    char ligne[MAX_LENGTH];
-
-    char tmp;
-
-    int indice_ligne=0;
-    int indice_virgule=0;
-    while (str[indice_ligne]!=",")
-    {
-        tmp=tmp+str[indice_ligne];
-        
-    }
+	FILE *fichier = fopen(chemin,"r");
+    char longueur_ligne=[taille_ligne];
+    char *token;
+    int champ_actuel = 0;
+	int t=0;
+	while( fgets(longueur_ligne, taille_ligne, fichier) != NULL)
+	{
+	    champ_actuel = 0;
+		Personne client[taille_tableau];
+	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
+	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
+	    while( (token = strsep(&copie_ligne, ",")) != NULL)
+	    {
+		    /* note the trailing field will contain newline. */
+		    if(*token == '\n')
+		    {
+		    	printf("element %d = -Saut de ligne-\n", champ_actuel);//continue;
+		    }
+		    else if(token == NULL){
+		    	printf("element %d = -Champ vide-\n", champ_actuel);
+		    }
+		    else{
+			
+		    	if(champ_actuel ==0 ){//nom
+					strcpy(client[t].nom,token);
+		    	}
+		    	else if(champ_actuel==1)
+	            {//prenom
+					strcpy(client[t].prenom,token);
+		    	}
+				else if(champ_actuel==2)
+	            {//ville
+		    	    strcpy(client[t].ville,token);
+		    	}
+	            else if(champ_actuel==3)
+	            {//code postal
+		    	    strcpy(client[t].code_postal,token);
+		    	}
+	            else if(champ_actuel==4)
+	            {//telephone
+		    	    strcpy(client[t].telephone,token);
+		    	}
+	            else if(champ_actuel==5)
+	            {//mail
+		    	    strcpy(client[t].mail,token);
+		    	}
+	            else if(champ_actuel==6)
+	            {//metier
+		    	    strcpy(client[t].metier,token);
+		    	}
+		    }
+		    champ_actuel++;
+	    }
+	    t++;
+	}
 }

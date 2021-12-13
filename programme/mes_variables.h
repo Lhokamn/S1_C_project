@@ -1,9 +1,10 @@
 #define chemin "../test_a_detruire.csv"
-#define ligne_tableau 6000
+#define taille_tableau 6000
 #define colonne_tableau 7
 #define MAX_LENGTH 5000
+#define taille_ligne 300
 
-struct Personne
+typedef struct 
 {
     char prenom[45];
     char nom[45];
@@ -12,4 +13,4 @@ struct Personne
     char telephone[10];
     char mail[60];
     char metier[50];
-};
+} Personne;
