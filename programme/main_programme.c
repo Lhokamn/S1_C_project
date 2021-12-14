@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mes_fonctions.h"
+#define chemin "../test_a_detruire.csv"
 
 int main(void)
 {
@@ -12,6 +13,7 @@ int main(void)
         return EXIT_FAILURE;
     }
     fclose(fichier);
+    
     remplissage_tableau();
 
     tri_tableau();

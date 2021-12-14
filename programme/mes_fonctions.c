@@ -31,6 +31,7 @@ int menu(void)
 				break;
 		}
 	}
+	return EXIT_FAILURE;
 }
 
 void tri_bulle(char tableau[taille_tableau],int indice)
@@ -55,97 +56,62 @@ void tri_bulle(char tableau[taille_tableau],int indice)
 }
 
 
-tri_tableau()
-{
-	int indice=1;
-	char tableau_prenom=taille_tableau;
-	char tableau_ville=taille_tableau;
-	char tableau_code_postal=taille_tableau;
-	char tableau_telephone=taille_tableau;
-	char tableau_mail=taille_tableau;
-	char tableau_metier=taille_tableau;
-	while (indice<7)
-		switch (indice)
-		{
-		case 1:
-			tri_bulle(tableau_prenom,indice);
-			break;
-		case 2:
-			tri_bulle(tableau_ville,indice);
-			break;
-		case 3:
-			tri_bulle(tableau_code_postal,indice);
-			break;
-		case 4:
-			tri_bulle(tableau_telephone,indice);
-			break;
-		case 5:
-			tri_bulle(tableau_mail,indice);
-			break;
-		case 6:
-			tri_bulle(tableau_metier,indice);
-			break;
-		default:
-			break;
-		}
-}
-
-
-void remplissage_tableau(void)
+int remplissage_tableau(void)
 {
 	FILE *fichier = fopen(chemin,"r");
     char longueur_ligne[taille_ligne];
     char *token;
-	int t=0;
+    int champ_actuel = 0;
 	while( fgets(longueur_ligne, taille_ligne, fichier) != NULL)
 	{
+	    champ_actuel = 0;
 		Personne client[taille_tableau];
 	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
 	    while( (token = strsep(&copie_ligne, ",")) != NULL)
 	    {
+			printf("%s \n",token);
 		    /* note the trailing field will contain newline. */
-		    if(*token == '\n'){
+		    if(*token == '\n')
+		    {
+		    	//ne rien faire
 		    }
 		    else if(token == NULL){
+		    	//ne rien faire
 		    }
 		    else{
-				switch (t)
-				{
-				case 0:
-					//nom
-					strcpy(client[t].nom,token);
-					break;
-				case 1:
-					//prenom
-					strcpy(client[t].prenom,token);
-					break;
-				case 2:
-					//ville
-		    	    strcpy(client[t].ville,token);
-					break;
-				case 3:
-					//code postal
-		    	    strcpy(client[t].code_postal,token);
-					break;
-				case 4:
-					//telephone
-		    	    strcpy(client[t].telephone,token);
-					break;	
-				case 5:
-					//mail
-		    	    strcpy(client[t].mail,token);
-					break;
-				case 6:
-					//metier
-		    	    strcpy(client[t].metier,token);
-					break;			
-				default:
-					break;
-				}
+			
+		    	if(champ_actuel ==0 ){//nom
+					strcpy(client[champ_actuel].nom,token);
+		    	}
+		    	else if(champ_actuel==1)
+	            {//prenom
+					strcpy(client[champ_actuel].prenom,token);
+		    	}
+				else if(champ_actuel==2)
+	            {//ville
+		    	    strcpy(client[champ_actuel].ville,token);
+		    	}
+	            else if(champ_actuel==3)
+	            {//code postal
+		    	    strcpy(client[champ_actuel].code_postal,token);
+		    	}
+	            else if(champ_actuel==4)
+	            {//telephone
+		    	    strcpy(client[champ_actuel].telephone,token);
+		    	}
+	            else if(champ_actuel==5)
+	            {//mail
+		    	    strcpy(client[champ_actuel].mail,token);
+		    	}
+	            else if(champ_actuel==6)
+	            {//metier
+		    	    strcpy(client[champ_actuel].metier,token);
+		    	}
 		    }
-			t++;
-	    } 
+		    champ_actuel++;
+	    }
 	}
 	fclose(fichier);
+	return EXIT_SUCCESS;
 }
