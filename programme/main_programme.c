@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mes_fonctions.h"
-#define chemin "../test_a_detruire.csv"
 
 int main(void)
 {
@@ -14,11 +13,10 @@ int main(void)
     }
     fclose(fichier);
     
-    remplissage_tableau();
+    Personne client[taille_tableau];
+    remplissage_tableau(client);
 
-    tri_tableau();
-
-    menu();
+    menu(client);
     printf("Au revoir !");
     return 0;
 }

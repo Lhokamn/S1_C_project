@@ -3,18 +3,47 @@
 #include <string.h>
 #include "mes_variables.h"
 
+void permuter(char *element1, char *element2)
+{
+    int tmp;
+    tmp = *element1;
+    *element1 = *element2;
+    *element2 = tmp;
+}
 
-int menu(void)
+void quicksort(Personne client[],int indice_colonne, int depart, int fin)
+{   
+	int pivot, i, j;
+    if(depart < fin) {
+        pivot = depart;
+        i = depart;
+        j = taille_tableau;
+        while (i < j) {
+            while(client[i][indice_colonne] <= client[pivot][indice_colonne] && i < fin)
+                i++;
+            while(client[j][indice_colonne] > client[pivot][indice_colonne])
+                j--;
+            if(i < j) {
+                permuter(&client[i][indice_colonne], &client[j][indice_colonne]);
+            }
+        }
+        permuter(&client[pivot][indice_colonne], &client[j][indice_colonne]);
+        quicksort(client, indice_colonne, depart, j-1);
+        quicksort(client, indice_colonne,  j + 1, fin);
+    }
+}
+
+int menu(Personne client[])
 {
     int menu=0;
     while (menu!=5)
 	{
-        printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3)recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme \n");
+        printf("Veuillez choisir ce que vous voulez faire\n 1) Insérer une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Quitter le programme \n");
         scanf("%d",&menu);
         switch (menu)
 		{
 			case 1:
-				/* code */
+				quicksort(client,0,0,taille_ligne);
 				break;
 			case 2:
 				/* code */
@@ -34,43 +63,21 @@ int menu(void)
 	return EXIT_FAILURE;
 }
 
-void tri_bulle(char tableau[taille_tableau],int indice)
-{
-	int j=0;
-	int tmp;
-	while (j<taille_tableau)
-	{
-		int k=0;
-		while (k<taille_ligne)
-		{
-			if (tableau[j]<tableau[k])
-			{
-				tmp=tableau[j];
-				tableau[j]=tableau[k];
-				tableau[k]=tmp;
-			}
-			k++;
-		}
-		j++;
-	}
-}
 
-
-int remplissage_tableau(void)
+int remplissage_tableau(Personne client[])
 {
 	FILE *fichier = fopen(chemin,"r");
     char longueur_ligne[taille_ligne];
     char *token;
     int champ_actuel = 0;
-	while( fgets(longueur_ligne, taille_ligne, fichier) != NULL)
+	//int ligne_actuelle=0;
+	while(fgets(longueur_ligne, taille_ligne, fichier) != NULL)
 	{
 	    champ_actuel = 0;
-		Personne client[taille_tableau];
 	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
 	    while( (token = strsep(&copie_ligne, ",")) != NULL)
 	    {
-			printf("%s \n",token);
 		    /* note the trailing field will contain newline. */
 		    if(*token == '\n')
 		    {
@@ -82,11 +89,11 @@ int remplissage_tableau(void)
 		    else{
 			
 		    	if(champ_actuel ==0 ){//nom
-					strcpy(client[champ_actuel].nom,token);
+					strcpy(client/*[ligne_actuelle]*/[champ_actuel].nom,token);
 		    	}
 		    	else if(champ_actuel==1)
 	            {//prenom
-					strcpy(client[champ_actuel].prenom,token);
+					strcpy(client[champ_actuel==1].prenom,token);
 		    	}
 				else if(champ_actuel==2)
 	            {//ville
@@ -111,6 +118,7 @@ int remplissage_tableau(void)
 		    }
 		    champ_actuel++;
 	    }
+		//ligne_actuelle++;
 	}
 	fclose(fichier);
 	return EXIT_SUCCESS;
