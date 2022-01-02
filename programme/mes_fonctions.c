@@ -3,7 +3,7 @@
 #include <string.h>
 #include "mes_variables.h"
 
-int lecture ()
+int lecture (Personne client[])
 {
 	
 	return EXIT_SUCCESS;
@@ -39,7 +39,7 @@ int lecture ()
 //     }
 // }
 
-/* Switch 1 */
+/*-----------------------------------Switch 1-----------------------------------*/
 
 /* Switch 1.1 */
 
@@ -123,9 +123,14 @@ int critere_insertion(Personne client[])
 	}
 }
 
-/* Switch 2 */
+/*-----------------------------------Switch 2-----------------------------------*/
 
-/* Switch 3 */
+int critere_suppression(Personne client[])
+{
+	printf("Choissi");
+}
+
+/*-----------------------------------Switch 3-----------------------------------*/
 
 /* Switch 3.1 */
 int recherche_dichotomie(Personne client[],int indice, char element_a_trouver, int debut, int fin)
@@ -169,7 +174,7 @@ int information_personne(Personne client[])
 	}
 }
 
-/* Switch 4 */
+/*-----------------------------------Switch 4-----------------------------------*/
 
 /* Switch 4.1 */
 
@@ -221,7 +226,7 @@ int menu(Personne client[])
 				critere_insertion(client);
 				break;
 			case 2:
-				/* code */
+				critere_suppression(client);
 				break;
 			case 3:
 				information_personne(client);
@@ -250,7 +255,8 @@ int remplissage_tableau(Personne client[])
 	    champ_actuel = 0;
 	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
-	    while( (token = strsep(&copie_ligne, ",")) != NULL)
+		printf("%s",champ_actuel);
+		while( (token = strsep(&copie_ligne, ",")) != NULL)
 	    {
 		    /* note the trailing field will contain newline. */
 		    if(*token == '\n')

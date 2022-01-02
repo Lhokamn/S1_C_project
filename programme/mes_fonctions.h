@@ -39,7 +39,21 @@ post-condition : retourne le client qui possède l'élément
 */
 int recherche_dichotomie(Personne client[],int indice, char element_a_trouver, int debut, int fin);
 
-void permuter(char *element1, char *element2)
+/*
+entrée : char, char
+sortie : char char
+pré-condition : aucune
+post-condition : échange les deux éléments
+*/
+void permuter(char *element1, char *element2);
+
+/*
+entrée : tableau de structure
+sortie : tableau de structure
+pré-condition : aucune
+post-condition : retourne le tableau de structure
+*/
+int lecture (Personne client[]);
 
 /*------------------------- Fonction Switch 1 ----------------------------------------------------*/
 
