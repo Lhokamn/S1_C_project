@@ -47,6 +47,8 @@ int insertion_personne(Personne client [])
 {
 	char *nomP, *prenomP, *villeP, *code_postalP, *telephoneP, *mailP, *metierP;
 	int champ_actuel=0;
+	client=realloc(client,(taille_tableau+1)*sizeof(char));
+	*taille_tableau++;
 	printf("Insérez le nom \n");
     scanf("%s",&nomP);
 	printf("Insérez le prénom \n");
@@ -94,9 +96,67 @@ int insertion_personne(Personne client [])
 	return EXIT_SUCCESS;
 }
 
-int modification_element(Personne client[])
+/* switch 1.2 */
+
+int modification_client(Personne client[], int champ_actuel)
 {
-	printf("Donnez ");
+	int critere;
+	char mot_a_remplacer;
+	printf("Quel critère voulait vous modifier ? \n 1) Prénom \n 2) Nom \n 3) Ville \n 4) Code postal \n 5) Téléphone \n 6) Mail \n 7) Métiers");
+	scanf("%d",&critere);
+	printf("Rentrez le nouveau élément");
+	scanf("%s",&mot_a_remplacer);
+	switch (critere)
+	{
+		case 1:
+			strcpy(client[champ_actuel].Prénom,critere);
+			break;
+		case 2:
+			strcpy(client[champ_actuel].nom,critere);
+			break;
+		case 3:
+			strcpy(client[champ_actuel].ville,critere);
+			break;
+		case 4:
+			strcpy(client[champ_actuel].code_postal,critere);
+			break;
+		case 5:
+			strcpy(client[champ_actuel].telephone,critere);
+			break;
+		case 6:
+			strcpy(client[champ_actuel].mail,critere);
+			break;
+		case 7:
+			strcpy(client[champ_actuel].metier,critere);
+			break;
+		default:
+			break;
+	}
+}
+
+int modification_client(Personne client[], char nom, char telephone)
+	int champ_actuel=0;
+	while()
+	{
+		if (client[champ_actuel].nom==*nom && client[champ_actuel].telephone==*telephone)
+		{
+			modification_client(client,champ_actuel);
+			return EXIT_SUCCESS
+		}
+		champ_actuel++;
+	
+	}
+	return EXIT_SUCCESS;	
+}
+
+int critere_recherche(Personne client[])
+{
+	char nom;
+	char telephone;
+	printf("rentrer le nom de famille et le numéro de téléphone");
+	scanf("%s %s",&nom,&telephone);
+	modification_client(client,*nom,*telephone);
+	return EXIT_SUCCESS;
 }
 
 int critere_insertion(Personne client[])
@@ -125,9 +185,29 @@ int critere_insertion(Personne client[])
 
 /*-----------------------------------Switch 2-----------------------------------*/
 
+int suppression_client(Personne client[], char *nom, char *telephone)
+{
+	int champ_actuel=0;
+	while()
+	{
+		if (client[champ_actuel].nom==*nom && client[champ_actuel].telephone==*telephone)
+		{
+
+		}
+		champ_actuel++;
+		printf("La personne cherché n'existe pas");
+	}
+	return EXIT_SUCCESS;	
+}
+
 int critere_suppression(Personne client[])
 {
-	printf("Choissi");
+	char nom;
+	char telephone;
+	printf("rentrer le nom de famille et le numéro de téléphone");
+	scanf("%s %s",&nom,&telephone);
+	suppression_client(client,*nom,*telephone);
+	return EXIT_SUCCESS;
 }
 
 /*-----------------------------------Switch 3-----------------------------------*/
@@ -255,10 +335,8 @@ int remplissage_tableau(Personne client[])
 	    champ_actuel = 0;
 	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
-		printf("%s",champ_actuel);
 		while( (token = strsep(&copie_ligne, ",")) != NULL)
 	    {
-		    /* note the trailing field will contain newline. */
 		    if(*token == '\n')
 		    {
 		    	//ne rien faire
