@@ -18,6 +18,7 @@ int main(void)
     remplissage_tableau(client);
 
     menu(client);
+    free(client);
     printf("Au revoir !");
-    return 0;
+    return EXIT_SUCCESS;
 }
