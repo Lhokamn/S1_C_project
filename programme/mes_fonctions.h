@@ -13,7 +13,7 @@ sortie : un tableau
 pré-condition : aucune
 post-condition : retourne un tableau avec les valeurs du fichier CSV
 */
-int remplissage_tableau(Personne client[]);
+int remplissage_tableau(Personne client[],int *nombre_client_actuel);
 
 /*
 entrée : tableau de structure
@@ -21,7 +21,7 @@ sortie : entier
 pré-condition : aucune
 post-condition : se termine quand l'utilisateur veut terminer le programme
 */
-int menu(Personne client[]);
+int menu(Personne client[],int *nombre_client_actuel);
 
 /*
 entrée : tableau de structure, int indice, int depart, int fin
@@ -29,7 +29,7 @@ sortie : tableau de structure
 pré-condition : que 0<indice<6
 post-condition : retourne le tableau triée selon la catégorie choisi
 */
-void quicksort(Personne client[],int indice_colonne, int depart, int fin);
+void quicksort(Personne client[],char critere, int depart, int fin);
 
 /*
 entrée : tableau de structure, int indice, char element_a_trouver, int debut, int fin

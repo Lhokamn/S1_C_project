@@ -3,8 +3,11 @@
 #include <string.h>
 #include "mes_fonctions.h"
 
+
 int main(void)
 {
+    int nombre_client_actuel=0;
+
     FILE *fichier=fopen(chemin,"r");
     if (fichier==NULL)
     {
@@ -15,9 +18,9 @@ int main(void)
     
     Personne *client;
     client=calloc(taille_tableau,sizeof(char));
-    remplissage_tableau(client);
+    remplissage_tableau(client, &nombre_client_actuel);
 
-    menu(client);
+    menu(client, &nombre_client_actuel);
     free(client);
     printf("Au revoir !");
     return EXIT_SUCCESS;
