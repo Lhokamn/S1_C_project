@@ -117,12 +117,12 @@ int critere_suppression(Personne client[],int *nombre_client_actuel);
 
 /*Switch 3.1*/
 /*
-entrée : tableau de structure, int, char, int, int
-sortie : un client
-pré-condition : que 0<indice<6
-post-condition : retourne le client qui possède l'élément
+entrée : tableau de structure, char, char, char int, int
+sortie : tableau de structure
+pré-condition : aucune
+post-condition : retourne le client qui possède les éléments choisi
 */
-int recherche_dichotomie(Personne client[],int indice, char element_a_trouver, int debut, int fin);
+int recherche_dichotomique(Personne client[], char prenomP, char nomP, char caracteristiqueP, int debut, int fin);
 
 /*main switch 3*/
 /*
@@ -144,12 +144,12 @@ post-condition : retourne un tableau de structure avec tous les clients qui corr
 int recherche_filtre(Personne client[], Personne client_filtre[]);
 
 /*
-entrée : tableau de structure, char, int
+entrée : tableau de structure, char
 sortie : booléen
 pré-condition : aucune
 post-condition : execute les fonctions de filtres
 */
-int lancement_filtre(Personne client[], char critere, int indice);
+int lancement_filtre(Personne client[], char critere);
 
 /*
 entrée : tableau de structure

@@ -4,7 +4,6 @@
 #include "mes_variables.h"
 
 
-
 //------------Algorithme de tri-------------- 
 void permuter(char *element1, char *element2)
 {
@@ -139,7 +138,7 @@ int critere_recherche(Personne client[], char *nom, char *telephone)
 
 int insertion_personne(Personne client [],int *nombre_client_actuel)
 {
-	char nomP[45], prenomP[45], villeP[45], code_postalP[6], telephoneP[10], mailP[60], metierP[50];
+	char nomP[45], prenomP[45], villeP[45], code_postalP[6], telephoneP[14], mailP[60], metierP[50];
 	int champ_actuel=0;
 	client=realloc(client,(*nombre_client_actuel+1)*sizeof(char));
 	nombre_client_actuel++;
@@ -250,7 +249,7 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 {
 	int insertion, nombre;
 	int i=0;
-	char *nom, *telephone;
+	char nom[45], telephone[14];
 	printf("Que voulez faire ?: \n 1) Insérez tous les éléments d'une personne \n 2) Modifier une donnée d'une personne \n");
     scanf("%d",&insertion);
 	switch (insertion)
@@ -302,9 +301,32 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 /*-----------------------------------Switch 3-----------------------------------*/
 
 /* Switch 3.1 */
-int recherche_dichotomie(Personne client[],int indice, char element_a_trouver, int debut, int fin)
+int recherche_dichotomique(Personne client[], char prenomP, char nomP, char caracteristiqueP, int debut, int fin)
 {
-	
+	int milieu=(debut+fin)/2;
+	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique==caracteristiqueP))
+	{
+		Personne *personne_rechercher;
+		personne_rechercher=calloc(1,sizeof(char));
+		strcpy(personne_rechercher[0].prenom,(client[milieu].prenom));
+		strcpy(personne_rechercher[0].nom,(client[milieu].nom));
+		strcpy(personne_rechercher[0].ville,(client[milieu].ville));
+		strcpy(personne_rechercher[0].code_postal,(client[milieu].code_postal));
+		strcpy(personne_rechercher[0].telephone,(client[milieu].telephone));
+		strcpy(personne_rechercher[0].mail,(client[milieu].mail));
+		strcpy(personne_rechercher[0].metier,(client[milieu].metier));
+		lecture(personne_rechercher);
+		return EXIT_SUCCESS;
+	}
+	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique<caracteristiqueP))
+	{
+		recherche_dichotomique(client,prenomP,nomP,caracteristiqueP,debut,milieu-1);
+	}
+	else if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique>caracteristiqueP))
+	{
+		recherche_dichotomique(client,prenomP,nomP,caracteristiqueP,milieu,fin);
+	}
+	printf("La personne sélectionné n'existe pas\n");
 	return EXIT_SUCCESS;
 }
 
@@ -312,56 +334,64 @@ int recherche_dichotomie(Personne client[],int indice, char element_a_trouver, i
 
 int information_personne(Personne client[],int nombre_client_actuel)
 {
-	int informations;
-	char nom;
-	char prenom;
-	char telephone;
-	char mail;
-	printf("Vous voulez rechercher par : \n 1) Son nom \n 2) Son prénom et numéro de téléphone \n 3) Son adresse mail \n");
-    scanf("%d",&informations);
-	switch (informations)
+	char nomP[45], prenomP[45], mailP[60], telP[14];
+	int critere_a_choisir;
+	printf("Rentrez le Prénom et le nom de la personne :\n");
+	scanf("%s %s",prenomP,nomP);
+	printf("Vous connaissez le numéro de téléphone ou l'adresse mail ? \n 1) Le numéro de téléphone \n L'adresse mail");
+	scanf("%d",critere_a_choisir);
+	if (critere_a_choisir==1)
 	{
-		case 1:
-			printf("Entrez le nom \n");
-			scanf("%s",&nom);
-			quicksort_nom(client,0,nombre_client_actuel);
-			recherche_dichotomie(client,informations,nom,0,taille_tableau-1);
-			break;
-		case 2:
-			printf("Entrez le prénom et le numéro de téléphone \n");
-			scanf("%s %s",&prenom,&telephone);
-			informations=5;
-			quicksort_prenom(client,0,nombre_client_actuel);
-			recherche_dichotomie(client,informations,telephone,0,taille_tableau-1);
-			break;
-		case 3:
-			printf("Entrez l'adresse mail \n");
-			scanf("%s",&mail);
-			quicksort_mail(client,0,nombre_client_actuel);
-			recherche_dichotomie(client,informations,mail,0,taille_tableau-1);
-			break;
-		default:
-			break;
+		printf("Rentrez le numéro de téléphone. Attention, il n'y a pas d'espace entre les nombres, il faut mettre un point : \n");
+		scanf("%s",telP);
+		recherche_dichotomique(client,prenomP,nomP,telP,0,nombre_client_actuel);
 	}
+	else
+	{
+		printf("Rentrez l'adresse mail : \n");
+		scanf("%s",mailP);
+		recherche_dichotomique(client,prenomP,nomP,mailP,0,nombre_client_actuel);
+	}
+	
 	return EXIT_SUCCESS;
 }
 
 /*-----------------------------------Switch 4-----------------------------------*/
 
 
-int recherche_filtre(Personne client[], Personne client_filtre[])
+int recherche_filtre(Personne client[], Personne client_filtre[], char critere)
 {
-
+	int indice=0, indice_filtre=0, nb_client_filtre;
+	while (indice<taille_tableau) //a modifier
+	{
+		if (client[indice].caractéristique==critere) //caractéristique est à définir pour écrire qu'une seule fonction ( appliquer ensuite à quichsort)
+		{
+			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(char));
+			strcpy(client_filtre[indice_filtre].prenom,(client[indice].prenom));
+			strcpy(client_filtre[indice_filtre].nom,(client[indice].nom));
+			strcpy(client_filtre[indice_filtre].ville,(client[indice].ville));
+			strcpy(client_filtre[indice_filtre].code_postal,(client[indice].code_postal));
+			strcpy(client_filtre[indice_filtre].telephone,(client[indice].telephone));
+			strcpy(client_filtre[indice_filtre].mail,(client[indice].mail));
+			strcpy(client_filtre[indice_filtre].metier,(client[indice].metier));
+			indice_filtre++;
+			nb_client_filtre++;
+		}
+		indice++;
+		if (client[indice].caractéristique>critere)
+		{
+			lecture(client_filtre);
+			return EXIT_SUCCESS;
+		}
+	}
 }
 
-int lancement_filtre(Personne client[], char critere, int indice)
+int lancement_filtre(Personne client[], char critere)
 {
 	Personne *client_filtre;
 	client_filtre=calloc(0,sizeof(char));
 
-	recherche_filtre(client,client_filtre);
-
-	lecture(client_filtre);
+	recherche_filtre(client,client_filtre,critere);
 	return EXIT_SUCCESS;
 }
 
@@ -377,19 +407,19 @@ int choisir_filtre(Personne client[],int *nombre_client_actuel)
 	{
 		case 1:
 			quicksort_nom(client,0,nombre_client_actuel);
-			lancement_filtre(client, critere, 0);
+			lancement_filtre(client, critere);
 			break;
 		case 2:
 			quicksort_prenom(client,0,nombre_client_actuel);
-			lancement_filtre(client, critere, 1);
+			lancement_filtre(client, critere);
 			break;
 		case 3:
 			quicksort_metier(client,0,nombre_client_actuel);
-			lancement_filtre(client, critere, 6);
+			lancement_filtre(client, critere);
 			break;
 		case 4:
 			quicksort_code_postal(client,0,nombre_client_actuel);
-			lancement_filtre(client, critere, 4);
+			lancement_filtre(client, critere);
 			break;
 		default:
 			break;
@@ -421,32 +451,32 @@ int lecture (Personne client[])
 		    }
 		    else{
 			
-		    	if(champ_actuel ==0 ){//nom
-					printf("nom=%s",token);
+		    	if(champ_actuel ==0 ){//prénom
+					printf("Prénom=%s",token);
 		    	}
 		    	else if(champ_actuel==1)
-	            {//prenom
-					printf("prénom=%s",token);
+	            {//nom
+					printf("Nnom=%s",token);
 		    	}
 				else if(champ_actuel==2)
 	            {//ville
-					printf("ville=%s",token);
+					printf("Ville=%s",token);
 		    	}
 	            else if(champ_actuel==3)
 	            {//code postal
-					printf("code postal=%s",token);
+					printf("Code postal=%s",token);
 		    	}
 	            else if(champ_actuel==4)
 	            {//telephone
-					printf("téléphone=%s",token);
+					printf("Téléphone=%s",token);
 		    	}
 	            else if(champ_actuel==5)
 	            {//mail
-					printf("mail=%s",token);
+					printf("Mail=%s",token);
 		    	}
 	            else if(champ_actuel==6)
 	            {//metier
-					printf("métier=%s",token);
+					printf("Métier=%s",token);
 		    	}
 		    }
 			printf("\n");
@@ -574,12 +604,12 @@ int remplissage_tableau(Personne client[], int *nombre_client_actuel)
 		    }
 		    else{
 			
-		    	if(champ_actuel ==0 ){//nom
-					strcpy(client[champ_actuel].nom,token);
+		    	if(champ_actuel ==0 ){//pre
+					strcpy(client[champ_actuel].prenom,token);
 		    	}
 		    	else if(champ_actuel==1)
-	            {//prenom
-					strcpy(client[champ_actuel].prenom,token);
+	            {//nom
+					strcpy(client[champ_actuel].nom,token);
 		    	}
 				else if(champ_actuel==2)
 	            {//ville
