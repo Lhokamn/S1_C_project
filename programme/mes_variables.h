@@ -10,7 +10,7 @@ typedef struct
     char nom[45];
     char ville[45];
     char code_postal[6];
-    char telephone[10];
+    char telephone[14];
     char mail[60];
     char metier[50];
 } Personne;
