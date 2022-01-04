@@ -1,0 +1,2 @@
+code doit marcher sur windows (via code blocks)
+pour chaque fonctionnalité, afficher le temps d'execution
