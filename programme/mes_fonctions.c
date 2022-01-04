@@ -132,62 +132,31 @@ int critere_recherche(Personne client[], char *nom, char *telephone)
 	return EXIT_SUCCESS;
 }
 
-int lecture (Personne client[])
+int lecture (Personne client[], int nb_client_actuel)
 {
-	FILE *fichier = fopen(chemin,"r");
-    char longueur_ligne[taille_ligne];
-    char *token;
-    int champ_actuel;
-	while(fgets(longueur_ligne, taille_ligne, fichier) != NULL)
+	int indice=0;
+	while (indice<=nb_client_actuel)
 	{
-	    champ_actuel = 0;
-	    char *copie_ligne = strdup(longueur_ligne);//dupliquer la chaîne ligne avec strdupa car le strsep modifie
-	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur d’origine
-		while( (token = strsep(&copie_ligne, ",")) != NULL)
-	    {
-		    if(*token == '\n')
-		    {
-		    	//ne rien faire
-		    }
-		    else if(token == NULL){
-		    	//ne rien faire
-		    }
-		    else{
-			
-		    	if(champ_actuel ==0 ){//prénom
-					printf("Prénom=%s",token);
-		    	}
-		    	else if(champ_actuel==1)
-	            {//nom
-					printf("Nnom=%s",token);
-		    	}
-				else if(champ_actuel==2)
-	            {//ville
-					printf("Ville=%s",token);
-		    	}
-	            else if(champ_actuel==3)
-	            {//code postal
-					printf("Code postal=%s",token);
-		    	}
-	            else if(champ_actuel==4)
-	            {//telephone
-					printf("Téléphone=%s",token);
-		    	}
-	            else if(champ_actuel==5)
-	            {//mail
-					printf("Mail=%s",token);
-		    	}
-	            else if(champ_actuel==6)
-	            {//metier
-					printf("Métier=%s",token);
-		    	}
-		    }
-			printf("\n");
-		    champ_actuel++;
-	    }
+		printf("Prénom=%s",client[indice].prenom);
+		printf("Nom=%s",client[indice].nom);
+		printf("Ville=%s",client[indice].ville);
+		printf("Code postal=%s",client[indice].code_postal);
+		printf("Téléphone=%s",client[indice].telephone);
+		printf("Mail=%s",client[indice].mail);
+		printf("Métier=%s",client[indice].metier);
 	}
-	fclose(fichier);
 	return EXIT_SUCCESS;
+}
+
+int ajout_dans_un_tableau(Personne client[], Personne tableau[],int indice_client, int indice_tableau)
+{
+	strcpy(tableau[indice_tableau].prenom,(client[indice_client].prenom));
+	strcpy(tableau[indice_tableau].nom,(client[indice_client].nom));
+	strcpy(tableau[indice_tableau].ville,(client[indice_client].ville));
+	strcpy(tableau[indice_tableau].code_postal,(client[indice_client].code_postal));
+	strcpy(tableau[indice_tableau].telephone,(client[indice_client].telephone));
+	strcpy(tableau[indice_tableau].mail,(client[indice_client].mail));
+	strcpy(tableau[indice_tableau].metier,(client[indice_client].metier));
 }
 
 /*-----------------------------------Switch 1-----------------------------------*/
@@ -366,14 +335,10 @@ int recherche_dichotomique(Personne client[], char prenomP, char nomP, char cara
 	{
 		Personne *personne_rechercher;
 		personne_rechercher=calloc(1,sizeof(char));
-		strcpy(personne_rechercher[0].prenom,(client[milieu].prenom));
-		strcpy(personne_rechercher[0].nom,(client[milieu].nom));
-		strcpy(personne_rechercher[0].ville,(client[milieu].ville));
-		strcpy(personne_rechercher[0].code_postal,(client[milieu].code_postal));
-		strcpy(personne_rechercher[0].telephone,(client[milieu].telephone));
-		strcpy(personne_rechercher[0].mail,(client[milieu].mail));
-		strcpy(personne_rechercher[0].metier,(client[milieu].metier));
-		lecture(personne_rechercher);
+		
+		ajout_dans_un_tableau(client,personne_rechercher,milieu,0);
+
+		lecture(personne_rechercher,1);
 		free(personne_rechercher);
 		return EXIT_SUCCESS;
 	}
@@ -425,20 +390,14 @@ int recherche_filtre(Personne client[], Personne client_filtre[], char critere)
 		if (client[indice].caracteristique==critere) //caractéristique est à définir pour écrire qu'une seule fonction ( appliquer ensuite à quichsort)
 		{
 			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(char));
-			strcpy(client_filtre[indice_filtre].prenom,(client[indice].prenom));
-			strcpy(client_filtre[indice_filtre].nom,(client[indice].nom));
-			strcpy(client_filtre[indice_filtre].ville,(client[indice].ville));
-			strcpy(client_filtre[indice_filtre].code_postal,(client[indice].code_postal));
-			strcpy(client_filtre[indice_filtre].telephone,(client[indice].telephone));
-			strcpy(client_filtre[indice_filtre].mail,(client[indice].mail));
-			strcpy(client_filtre[indice_filtre].metier,(client[indice].metier));
+			ajout_dans_un_tableau(client,client_filtre,indice,indice_filtre);
 			indice_filtre++;
 			nb_client_filtre++;
 		}
 		indice++;
 		if (client[indice].caracteristique>critere)
 		{
-			lecture(client_filtre);
+			lecture(client_filtre,nb_client_filtre);
 			free(client_filtre);
 			return EXIT_SUCCESS;
 		}
@@ -491,23 +450,20 @@ int choisir_filtre(Personne client[],int *nombre_client_actuel)
 int affichage_client_sans_éléments(Personne client[], int nombre_client_actuel)
 {
 	int indice=0;
+	int nb_client_sans_element=0;
 	Personne *client_sans_elements;
 	client_sans_elements=calloc(nombre_client_actuel,sizeof(char));
 	while (indice<nombre_client_actuel)
 	{
 		if ((client[indice].prenom==NULL) || (client[indice].nom==NULL) || (client[indice].ville==NULL) || (client[indice].code_postal==NULL) || (client[indice].telephone==NULL) || (client[indice].mail==NULL) || (client[indice].metier==NULL))
 		{
-			strcpy(client_sans_elements[indice].prenom,(client[indice].prenom));
-			strcpy(client_sans_elements[indice].nom,(client[indice].nom));
-			strcpy(client_sans_elements[indice].ville,(client[indice].ville));
-			strcpy(client_sans_elements[indice].code_postal,(client[indice].code_postal));
-			strcpy(client_sans_elements[indice].telephone,(client[indice].telephone));
-			strcpy(client_sans_elements[indice].mail,(client[indice].mail));
-			strcpy(client_sans_elements[indice].metier,(client[indice].metier));
+			client_sans_elements=realloc(client_sans_elements,(nb_client_sans_element+1)*sizeof(char));
+			ajout_dans_un_tableau(client,client_sans_elements,indice,nb_client_sans_element);
+			nb_client_sans_element++;
 		}
 		indice++;
 	}
-	lecture(client_sans_elements);
+	lecture(client_sans_elements,nb_client_sans_element);
 	free(client_sans_elements);
 	return EXIT_SUCCESS;
 }
@@ -521,7 +477,7 @@ int affichage(Personne client[], int nombre_client_actuel)
 	switch (affichage)
 	{
 	case 1:
-		lecture(client);
+		lecture(client,nombre_client_actuel);
 		break;
 	case 2:
 		affichage_client_sans_éléments(client, nombre_client_actuel);
@@ -586,7 +542,7 @@ int menu(Personne client[], int *nombre_client_actuel)
     int menu=0;
     while (menu!=6)
 	{
-        printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) affichage \n 6) Quitter le programme \n");
+        printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
         scanf("%d",&menu);
         switch (menu)
 		{
