@@ -3,7 +3,6 @@
 #include <string.h>
 #include "mes_variables.h"
 
-
 //------------Algorithme de tri-------------- 
 void permuter(char *element1, char *element2)
 {
@@ -125,10 +124,10 @@ void quicksort_mail(Personne client[], int depart, int fin)
 
 //--------------------------------------------
 
-int critere_recherche(Personne client[], char *nom, char *telephone)
+int critere_recherche(Personne client[],char *prenom, char *nom, char *telephone)
 {
-	printf("rentrer le nom de famille et le numéro de téléphone \n");
-	scanf("%s %s",nom,telephone);
+	printf("Rentrer le prénom, le nom de famille et le numéro de téléphone \n");
+	scanf("%s %s %s",prenom,nom,telephone);
 	return EXIT_SUCCESS;
 }
 
@@ -157,6 +156,7 @@ int ajout_dans_un_tableau(Personne client[], Personne tableau[],int indice_clien
 	strcpy(tableau[indice_tableau].telephone,(client[indice_client].telephone));
 	strcpy(tableau[indice_tableau].mail,(client[indice_client].mail));
 	strcpy(tableau[indice_tableau].metier,(client[indice_client].metier));
+	return EXIT_SUCCESS;
 }
 
 /*-----------------------------------Switch 1-----------------------------------*/
@@ -218,7 +218,7 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 
 /* switch 1.2 */
 
-int modification_client(Personne client[], int champ_actuel)
+int modification_client(Personne client[], Personne personne_trouve[],int milieu)
 {
 	int critere;
 	char mot_a_remplacer[60];
@@ -229,45 +229,31 @@ int modification_client(Personne client[], int champ_actuel)
 	switch (critere)
 	{
 		case 1:
-			strcpy(client[champ_actuel].prenom,mot_a_remplacer);
+			strcpy(personne_trouve[0].prenom,mot_a_remplacer);
 			break;
 		case 2:
-			strcpy(client[champ_actuel].nom,mot_a_remplacer);
+			strcpy(personne_trouve[0].nom,mot_a_remplacer);
 			break;
 		case 3:
-			strcpy(client[champ_actuel].ville,mot_a_remplacer);
+			strcpy(personne_trouve[0].ville,mot_a_remplacer);
 			break;
 		case 4:
-			strcpy(client[champ_actuel].code_postal,mot_a_remplacer);
+			strcpy(personne_trouve[0].code_postal,mot_a_remplacer);
 			break;
 		case 5:
-			strcpy(client[champ_actuel].telephone,mot_a_remplacer);
+			strcpy(personne_trouve[0].telephone,mot_a_remplacer);
 			break;
 		case 6:
-			strcpy(client[champ_actuel].mail,mot_a_remplacer);
+			strcpy(personne_trouve[0].mail,mot_a_remplacer);
 			break;
 		case 7:
-			strcpy(client[champ_actuel].metier,mot_a_remplacer);
+			strcpy(personne_trouve[0].metier,mot_a_remplacer);
 			break;
 		default:
 			break;
 	}
+	ajout_dans_un_tableau(client,personne_trouve,milieu,0);
 	return EXIT_SUCCESS;
-}
-
-int verification_client(Personne client[], char *nom, char *telephone)
-{
-	int champ_actuel=0;
-	while(champ_actuel<taille_tableau)
-	{
-		if (client[champ_actuel].nom==nom && client[champ_actuel].telephone==telephone)
-		{
-			modification_client(client,champ_actuel);
-			return EXIT_SUCCESS;
-		}
-		champ_actuel++;
-	}
-	return EXIT_SUCCESS;	
 }
 
 /*main switch 1*/
@@ -276,7 +262,7 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 {
 	int insertion, nombre;
 	int i=0;
-	char nom[45], telephone[14];
+	char prenom[45], nom[45], telephone[14];
 	printf("Que voulez faire ?: \n 1) Insérez tous les éléments d'une personne \n 2) Modifier une donnée d'une personne \n");
     scanf("%d",&insertion);
 	switch (insertion)
@@ -290,8 +276,13 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 			}
 			break;
 		case 2:
-			critere_recherche(client,nom,telephone);
-			verification_client(client,nom,telephone);
+			Personne *personne_rechercher;
+			personne_rechercher=calloc(1,sizeof(char));
+			critere_recherche(client,prenom,nom,telephone);
+			int milieu=(0+*nombre_client_actuel)/2;
+			recherche_dichotomique_telephone(client,personne_rechercher,prenom,nom,telephone,0,nombre_client_actuel,&milieu);
+			modification_client(client,personne_rechercher,milieu);
+			free(personne_rechercher);
 			break;
 		default:
 			break;
@@ -301,37 +292,59 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 
 /*-----------------------------------Switch 2-----------------------------------*/
 
-int suppression_client(Personne client[], char *nom, char *telephone,int *nombre_client_actuel)
+int suppression_client(Personne client[], Personne personne_trouver[], int milieu, int personne)
 {
-	int champ_actuel=0;
-	while(champ_actuel<taille_tableau)
+	if (client[milieu].prenom==personne_trouver[personne].prenom && client[milieu].nom==personne_trouver[personne].nom && client[milieu].telephone==personne_trouver[personne].telephone)
 	{
-		if (client[champ_actuel].nom==nom && client[champ_actuel].telephone==telephone)
-		{
-			client=realloc(client,(*nombre_client_actuel-1)*sizeof(char));
-			nombre_client_actuel--;
-		}
-		champ_actuel++;
-		printf("La personne cherché n'existe pas \n");
+		//
 	}
 	return EXIT_SUCCESS;	
 }
 
 int critere_suppression(Personne client[],int *nombre_client_actuel)
 {
-	char *nom, *telephone;
-	critere_recherche(client,nom,telephone);
-	suppression_client(client,nom,telephone,nombre_client_actuel);
+	char *prenom, *nom, *telephone;
+	int milieu=((0+*nombre_client_actuel)/2);
+	Personne *personne_rechercher;
+	personne_rechercher=calloc(1,sizeof(char));
+
+	critere_recherche(client,prenom,nom,telephone);		
+	recherche_dichotomique_telephone(client,personne_rechercher,prenom,nom,telephone,0,nombre_client_actuel,&milieu);		
+	suppression_client(client,personne_rechercher,milieu,0);
+	free(personne_rechercher);
 	return EXIT_SUCCESS;
 }
 
 /*-----------------------------------Switch 3-----------------------------------*/
 
 /* Switch 3.1 */
-int recherche_dichotomique(Personne client[], char prenomP, char nomP, char caracteristiqueP, int debut, int fin)
+
+//Il faut faire arriver à la fin à retourner le milieu pour pouvoir le réutiliser après
+
+int recherche_dichotomique_telephone(Personne client[],Personne personne_rechercher[], char prenomP, char nomP, char telP, int debut, int fin, int milieu)
+{	
+	int milieu_dico=(debut+fin)/2;
+	if ((client[milieu_dico].prenom==prenomP) && (client[milieu_dico].nom==nomP) && (client[milieu_dico].telephone==telP))
+	{
+		ajout_dans_un_tableau(client,personne_rechercher,milieu,0);
+		return EXIT_SUCCESS;
+	}
+	if ((client[milieu_dico].prenom==prenomP) && (client[milieu_dico].nom==nomP) && (client[milieu_dico].telephone<telP))
+	{
+		recherche_dichotomique_telephone(client,personne_rechercher,prenomP,nomP,telP,debut,milieu-1,milieu_dico);
+	}
+	else if ((client[milieu_dico].prenom==prenomP) && (client[milieu_dico].nom==nomP) && (client[milieu_dico].telephone>telP))
+	{
+		recherche_dichotomique_telephone(client,personne_rechercher, prenomP,nomP,telP,milieu,fin,milieu_dico);
+	}
+	printf("La personne sélectionné n'existe pas\n");
+	return EXIT_SUCCESS;
+}
+
+int recherche_dichotomique_mail(Personne client[],Personne personne_rechercher[], char prenomP, char nomP, char mailP, int debut, int fin)
 {
 	int milieu=(debut+fin)/2;
-	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique==caracteristiqueP))
+	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].mail==mailP))
 	{
 		Personne *personne_rechercher;
 		personne_rechercher=calloc(1,sizeof(char));
@@ -342,13 +355,13 @@ int recherche_dichotomique(Personne client[], char prenomP, char nomP, char cara
 		free(personne_rechercher);
 		return EXIT_SUCCESS;
 	}
-	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique<caracteristiqueP))
+	if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].mail<mailP))
 	{
-		recherche_dichotomique(client,prenomP,nomP,caracteristiqueP,debut,milieu-1);
+		recherche_dichotomique_mail(client,personne_rechercher,prenomP,nomP,mailP,debut,milieu-1);
 	}
-	else if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].caracteristique>caracteristiqueP))
+	else if ((client[milieu].prenom==prenomP) && (client[milieu].nom==nomP) && (client[milieu].mail>mailP))
 	{
-		recherche_dichotomique(client,prenomP,nomP,caracteristiqueP,milieu,fin);
+		recherche_dichotomique_mail(client,personne_rechercher,prenomP,nomP,mailP,milieu,fin);
 	}
 	printf("La personne sélectionné n'existe pas\n");
 	return EXIT_SUCCESS;
@@ -363,46 +376,50 @@ int information_personne(Personne client[],int nombre_client_actuel)
 	printf("Rentrez le Prénom et le nom de la personne :\n");
 	scanf("%s %s",prenomP,nomP);
 	printf("Vous connaissez le numéro de téléphone ou l'adresse mail ? \n 1) Le numéro de téléphone \n L'adresse mail");
-	scanf("%d",critere_a_choisir);
+	scanf("%d",&critere_a_choisir);
+	Personne *personne_rechercher;
+	personne_rechercher=calloc(1,sizeof(char));
 	if (critere_a_choisir==1)
 	{
 		printf("Rentrez le numéro de téléphone. Attention, il n'y a pas d'espace entre les nombres, il faut mettre un point : \n");
 		scanf("%s",telP);
-		recherche_dichotomique(client,prenomP,nomP,telP,0,nombre_client_actuel);
+		int milieu=((0+nombre_client_actuel)/2);
+		recherche_dichotomique_telephone(client,personne_rechercher, prenomP,nomP,telP,0,nombre_client_actuel,milieu);
+		lecture(personne_rechercher,1);
+		free(personne_rechercher);
 	}
 	else
 	{
 		printf("Rentrez l'adresse mail : \n");
 		scanf("%s",mailP);
-		recherche_dichotomique(client,prenomP,nomP,mailP,0,nombre_client_actuel);
+		recherche_dichotomique_mail(client,personne_rechercher,prenomP,nomP,mailP,0,nombre_client_actuel);
 	}
 	return EXIT_SUCCESS;
 }
 
 /*-----------------------------------Switch 4-----------------------------------*/
 
-
-int recherche_filtre(Personne client[], Personne client_filtre[], char critere)
-{
-	int indice=0, indice_filtre=0, nb_client_filtre;
-	while (indice<taille_tableau) //a modifier
-	{
-		if (client[indice].caracteristique==critere) //caractéristique est à définir pour écrire qu'une seule fonction ( appliquer ensuite à quichsort)
-		{
-			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(char));
-			ajout_dans_un_tableau(client,client_filtre,indice,indice_filtre);
-			indice_filtre++;
-			nb_client_filtre++;
-		}
-		indice++;
-		if (client[indice].caracteristique>critere)
-		{
-			lecture(client_filtre,nb_client_filtre);
-			free(client_filtre);
-			return EXIT_SUCCESS;
-		}
-	}
-}
+// int recherche_filtre(Personne client[], Personne client_filtre[], char critere)
+// {
+// 	int indice=0, indice_filtre=0, nb_client_filtre;
+// 	while (indice<taille_tableau) //a modifier
+// 	{
+// 		if (client[indice].caracteristique==critere) //caractéristique est à définir pour écrire qu'une seule fonction ( appliquer ensuite à quichsort)
+// 		{
+// 			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(char));
+// 			ajout_dans_un_tableau(client,client_filtre,indice,indice_filtre);
+// 			indice_filtre++;
+// 			nb_client_filtre++;
+// 		}
+// 		indice++;
+// 		if (client[indice].caracteristique>critere)
+// 		{
+// 			lecture(client_filtre,nb_client_filtre);
+// 			free(client_filtre);
+// 			return EXIT_SUCCESS;
+// 		}
+// 	}
+// }
 
 int lancement_filtre(Personne client[], char critere)
 {
@@ -447,7 +464,7 @@ int choisir_filtre(Personne client[],int *nombre_client_actuel)
 
 /*-----------------------------------Switch 5-----------------------------------*/
 
-int affichage_client_sans_éléments(Personne client[], int nombre_client_actuel)
+int affichage_client_sans_elements(Personne client[], int nombre_client_actuel)
 {
 	int indice=0;
 	int nb_client_sans_element=0;
@@ -468,7 +485,6 @@ int affichage_client_sans_éléments(Personne client[], int nombre_client_actuel
 	return EXIT_SUCCESS;
 }
 
-
 int affichage(Personne client[], int nombre_client_actuel)
 {
 	int affichage;
@@ -480,7 +496,7 @@ int affichage(Personne client[], int nombre_client_actuel)
 		lecture(client,nombre_client_actuel);
 		break;
 	case 2:
-		affichage_client_sans_éléments(client, nombre_client_actuel);
+		affichage_client_sans_elements(client, nombre_client_actuel);
 		break;
 	default:
 		break;
@@ -581,7 +597,6 @@ int menu(Personne client[], int *nombre_client_actuel)
 	return EXIT_SUCCESS;
 }
 
-
 int remplissage_tableau(Personne client[], int *nombre_client_actuel)
 {
 	FILE *fichier = fopen(chemin,"r");
@@ -637,9 +652,7 @@ int remplissage_tableau(Personne client[], int *nombre_client_actuel)
 	    }
 		nb_client++;
 	}
-
 	*nombre_client_actuel = nb_client;
-
 	fclose(fichier);
 	return EXIT_SUCCESS;
 }
