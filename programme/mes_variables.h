@@ -3,6 +3,7 @@
 #define colonne_tableau 7
 #define MAX_LENGTH 5000
 #define taille_ligne 300
+#define size_of_buff 45
 
 typedef struct 
 {

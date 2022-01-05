@@ -44,6 +44,7 @@ pré-condition : aucune
 post-condition : échange les deux éléments
 */
 void permuter(char *element1, char *element2);
+
 //-------------------------------------------
 
 /*
