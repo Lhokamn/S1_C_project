@@ -6,11 +6,11 @@
 
 typedef struct 
 {
-    char prenom[45];
-    char nom[45];
-    char ville[45];
-    char code_postal[6];
-    char telephone[14];
-    char mail[60];
-    char metier[50];
+    char prenom[46];
+    char nom[46];
+    char ville[46];
+    char code_postal[7];
+    char telephone[15];
+    char mail[61];
+    char metier[51];
 } Personne;

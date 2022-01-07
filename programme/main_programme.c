@@ -17,7 +17,7 @@ int main(void)
     fclose(fichier);
     
     Personne *client;
-    client=calloc(taille_tableau,sizeof(char));
+    client=(Personne *)calloc(taille_tableau,sizeof(Personne));
     remplissage_tableau(client, &nombre_client_actuel);
 
     menu(client, &nombre_client_actuel);
