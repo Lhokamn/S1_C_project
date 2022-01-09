@@ -248,8 +248,6 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	char nomP[46], prenomP[46], villeP[46], code_postalP[7], telephoneP[15], mailP[61], metierP[51];
 	clock_t premier_temps, deuxieme_temps;
 	float temps_total;
-	(*nombre_client_actuel)++;
-	client=realloc(client,(*nombre_client_actuel)*sizeof(Personne));
 	printf("Insérez le prénom \n");
     scanf("%s",prenomP);
 	printf("Insérez le nom \n");
@@ -272,7 +270,8 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	strcpy(client[*nombre_client_actuel].telephone,telephoneP);
 	strcpy(client[*nombre_client_actuel].mail,mailP);
 	strcpy(client[*nombre_client_actuel].metier,metierP);
-	lecture(client,*nombre_client_actuel);
+	(*nombre_client_actuel)++;
+	client=realloc(client,(*nombre_client_actuel)*sizeof(Personne));
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
 	printf("Le temps d'insertion de la personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
@@ -400,7 +399,6 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 	scanf("%s %s %s",prenom,nom,telephone);
 	premier_temps=clock();
 	quicksort_nom(client,0,*nombre_client_actuel);	
-	printf("Je suis là\n");
 	if (recherche_dichotomique_telephone(client,personne_rechercher,prenom,nom,telephone,0,*nombre_client_actuel,&milieu)==0)
 	{
 		suppression_client(client,&milieu,nombre_client_actuel);
@@ -422,12 +420,26 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 
 int recherche_dichotomique_telephone(Personne client[],Personne personne_rechercher[], char *prenomP, char *nomP, char *telP, int debut, int fin, int *milieu)
 {	
+	int i,j;
 	while (debut<=fin)
 	{
 		(*milieu)=(debut+fin)/2;
-		printf("Client[%d].nom=%s\nClient[%d].prenom=%s\n",(*milieu),client[*milieu].nom,(*milieu),client[*milieu].prenom);
-		if ((strcmp(client[*milieu].prenom,prenomP)==0) && (strcmp(client[*milieu].nom,nomP)==0) && (strcmp(client[*milieu].mail,telP)==0))
+		if (strcmp(client[*milieu].nom,nomP)==0)
 		{
+			i=(*milieu), j=(*milieu);
+			while ((strcmp(client[i].nom,nomP)==0)||(strcmp(client[j].nom,nomP)==0))
+			{
+				if ((strcmp(client[i].prenom,prenomP)==0) && (strcmp(client[i].telephone,telP)==0))
+				{
+					(*milieu)=i;
+				}
+				else
+				{
+					(*milieu)=j;
+				}
+				i--;
+				j++;
+			}
 			ajout_dans_un_tableau(client,personne_rechercher,*milieu,0);
 			return EXIT_SUCCESS;
 		}
@@ -437,7 +449,7 @@ int recherche_dichotomique_telephone(Personne client[],Personne personne_recherc
 		}
 		else
 		{
-			debut=(*milieu)+1;
+			debut=(*milieu);
 		}
 	}
 	return EXIT_FAILURE;
@@ -445,21 +457,36 @@ int recherche_dichotomique_telephone(Personne client[],Personne personne_recherc
 
 int recherche_dichotomique_mail(Personne client[],Personne personne_rechercher[], char *prenomP, char *nomP, char *mailP, int debut, int fin)
 {	
+	int i,j,milieu;
 	while (debut<=fin)
 	{
-		int milieu=(debut+fin)/2;
-		if ((strcmp(client[milieu].prenom,prenomP)==0) && (strcmp(client[milieu].nom,nomP)==0) && (strcmp(client[milieu].mail,mailP)==0))
+		milieu=(debut+fin)/2;
+		if (strcmp(client[milieu].nom,nomP)==0)
 		{
+			i=milieu, j=milieu;
+			while ((strcmp(client[i].nom,nomP)==0)||(strcmp(client[j].nom,nomP)==0))
+			{
+				if ((strcmp(client[i].prenom,prenomP)==0) && (strcmp(client[i].mail,mailP)==0))
+				{
+					milieu=i;
+				}
+				else
+				{
+					milieu=j;
+				}
+				i--;
+				j++;
+			}
 			ajout_dans_un_tableau(client,personne_rechercher,milieu,0);
 			return EXIT_SUCCESS;
 		}
 		else if (strcmp(client[milieu].nom,nomP)>0)
 		{
-			fin=milieu-1;
+			fin=(milieu)-1;
 		}
 		else
 		{
-			debut=milieu+1;
+			debut=(milieu);
 		}
 	}
 	return EXIT_FAILURE;
@@ -715,51 +742,18 @@ int ecriture_fichier_csv(Personne client[],int nombre_client_actuel)
 	clock_t premier_temps, deuxieme_temps;
 	float temps_total;
 	premier_temps=clock();
-	FILE *fichier = fopen(chemin,"w");
-	char ligne[taille_ligne];
-    int champ_actuel;
+	FILE *fichier = fopen(chemin,"w+");
 	int indice=0;
-	while(fgets(ligne, taille_ligne, fichier) != NULL)
+	while(indice<nombre_client_actuel)
 	{
-		champ_actuel=0;
-		while (indice<nombre_client_actuel)
-		{	
-		    if(champ_actuel ==0 ){//nom
-				fprintf(fichier,"%s,",client[indice].prenom);
-		    }
-		    else if(champ_actuel==1)
-	        {//prenom
-				fprintf(fichier,"%s,",client[indice].nom);
-		    }
-			else if(champ_actuel==2)
-	        {//ville
-		        fprintf(fichier,"%s,",client[indice].ville);
-		    }
-	        else if(champ_actuel==3)
-	        {//code postal
-		        fprintf(fichier,"%s,",client[indice].code_postal);
-		    }
-	        else if(champ_actuel==4)
-	        {//telephone
-		        fprintf(fichier,"%s,",client[indice].telephone);
-		    }
-	        else if(champ_actuel==5)
-	        {//mail
-		        fprintf(fichier,"%s,",client[indice].mail);
-		    }
-	        else if(champ_actuel==6)
-	        {//metier
-		        fprintf(fichier,"%s",client[indice].metier);
-		    }
-			champ_actuel++;
-		}
-		fprintf(fichier,"\n");	
+
+		fprintf(fichier,"%s,%s,%s,%s,%s,%s,%s",client[indice].prenom,client[indice].nom,client[indice].ville,client[indice].code_postal,client[indice].telephone,client[indice].mail,client[indice].metier);
 		indice++;	
 	}
 	fclose(fichier);
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps de réécriture du fichier est de : %f",temps_total);
+	printf("Le temps de réécriture du fichier est de : %f",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -768,16 +762,14 @@ int ecriture_fichier_csv(Personne client[],int nombre_client_actuel)
 int menu(Personne client[], int *nombre_client_actuel)
 {
     int menu=0;
-	printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
-    scanf("%d",&menu);
     while (menu!=6)
 	{
+		printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
+       	scanf("%d",&menu);
         switch (menu)
 		{
 			case 1:
 				critere_insertion(client,nombre_client_actuel);
-				printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
-       		 	scanf("%d",&menu);
 				break;
 			case 2:
 				critere_suppression(client,nombre_client_actuel);
@@ -806,6 +798,10 @@ int menu(Personne client[], int *nombre_client_actuel)
 				printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
     			scanf("%d",&menu);
 				break;
+		}
+		if (menu==6)
+		{
+			ecriture_fichier_csv(client,*nombre_client_actuel);
 		}
 	}
 	return EXIT_SUCCESS;
