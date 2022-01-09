@@ -230,7 +230,7 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	printf("Prénom=%s\nnom=%s\nville==%s\n",client[*nombre_client_actuel].prenom,client[*nombre_client_actuel].nom,client[*nombre_client_actuel].ville);
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps d'insertion de la personne est de : %f",temps_total);
+	printf("Le temps d'insertion de la personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -312,7 +312,7 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 			free(personne_rechercher);
 			deuxieme_temps=clock();
 			temps_total=(float)(deuxieme_temps-premier_temps);
-			printf("temps d'execution du programme de modification=%f\n",temps_total);
+			printf("temps d'execution du programme de modification=%f s\n",(temps_total/CLOCKS_PER_SEC));
 			break;
 		default:
 			break;
@@ -366,7 +366,7 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 	free(personne_rechercher);
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps de suppression d'une personne est de : %f",temps_total);
+	printf("Le temps de suppression d'une personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -387,7 +387,7 @@ int recherche_dichotomique_telephone(Personne client[],Personne personne_recherc
 			ajout_dans_un_tableau(client,personne_rechercher,*milieu,0);
 			return EXIT_SUCCESS;
 		}
-		else if (((strcmp(client[*milieu].prenom,prenomP)>0) || (strcmp(client[*milieu].nom,nomP)>0) || (strcmp(client[*milieu].mail,telP)>0))>0)
+		else if (strcmp(client[*milieu].nom,nomP)>0)
 		{
 			(*fin)=(*milieu)-1;
 		}
@@ -409,7 +409,7 @@ int recherche_dichotomique_mail(Personne client[],Personne personne_rechercher[]
 			ajout_dans_un_tableau(client,personne_rechercher,milieu,0);
 			return EXIT_SUCCESS;
 		}
-		else if ((strcmp(client[milieu].prenom,prenomP)>0) || (strcmp(client[milieu].nom,nomP)>0) || (strcmp(client[milieu].mail,mailP)>0))
+		else if (strcmp(client[milieu].nom,nomP)>0)
 		{
 			(*fin)=milieu-1;
 		}
@@ -470,12 +470,11 @@ int information_personne(Personne client[],int *nombre_client_actuel)
 	scanf("%d",&critere_a_choisir);
 	Personne *personne_rechercher;
 	personne_rechercher=(Personne *)calloc(1,sizeof(Personne));
-	printf("prénom=%s \nnom=%s",prenomP,nomP);
 	premier_temps=clock();
+	// quicksort_nom(client,0,nombre_client_actuel);
 	if (critere_a_choisir==1)
 	{
 		recherche_tel(client, personne_rechercher,nombre_client_actuel,nomP,prenomP,telP);
-		
 	}
 	else
 	{
@@ -483,7 +482,7 @@ int information_personne(Personne client[],int *nombre_client_actuel)
 	}
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps pour rechercher une personne est de : %f",temps_total);
+	printf("Le temps pour rechercher une personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -630,7 +629,7 @@ int choisir_filtre(Personne client[],int *nombre_client_actuel)
 	}
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps pour filtrer la liste de client est de : %f",temps_total);
+	printf("Le temps pour filtrer la liste de client est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -680,7 +679,7 @@ int affichage(Personne client[], int *nombre_client_actuel)
 	}
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps d'affichage est de : %f",temps_total);
+	printf("Le temps d'affichage est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
 
@@ -751,6 +750,7 @@ int menu(Personne client[], int *nombre_client_actuel)
 		{
 			case 1:
 				critere_insertion(client,nombre_client_actuel);
+				lecture(client,*nombre_client_actuel);
 				printf("Veuillez choisir ce que vous voulez faire :\n 1) Insérer ou modifier une personne \n 2) Supprimer une personne \n 3) Recherche des informations d'une personne \n 4) Filtrer \n 5) Affichage \n 6) Quitter le programme \n");
        		 	scanf("%d",&menu);
 				break;
@@ -804,9 +804,10 @@ int remplissage_tableau(Personne client[taille_tableau], int *nombre_client_actu
 		    {
 		    	//ne rien faire
 		    }
-		    else if(token == NULL){
-		    	//ne rien faire
-		    }
+		    else if(token == NULL)
+			{	
+				//ne rien faireg
+			}
 		    else{
 			
 		    	if(champ_actuel ==0 ){//pre
