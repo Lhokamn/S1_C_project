@@ -167,7 +167,7 @@ sortie : tableau de structure
 pré-condition : aucune
 post-condition : lit tout le tableau
 */
-int lecture (Personne client[]);
+int lecture (Personne client[], int nb_client_actuel);
 
 /*------------------------- Fonction Switch 6 ----------------------------------------------------*/
 
