@@ -212,7 +212,7 @@ int recherche_dichotomique_telephone(Personne client[],Personne personne_recherc
 int lecture (Personne client[], int nb_client_actuel)
 {
 	int indice=0;
-	while (indice<nb_client_actuel)
+	while (indice<=nb_client_actuel)
 	{
 		printf("\nclient n°=%d\n",indice);
 		printf("Prénom=%s\n",client[indice].prenom);
@@ -272,7 +272,7 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	strcpy(client[*nombre_client_actuel].telephone,telephoneP);
 	strcpy(client[*nombre_client_actuel].mail,mailP);
 	strcpy(client[*nombre_client_actuel].metier,metierP);
-	printf("Prénom=%s\nnom=%s\nville==%s\n",client[*nombre_client_actuel].prenom,client[*nombre_client_actuel].nom,client[*nombre_client_actuel].ville);
+	lecture(client,*nombre_client_actuel);
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
 	printf("Le temps d'insertion de la personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
@@ -532,7 +532,6 @@ int information_personne(Personne client[],int *nombre_client_actuel)
 
 /*-----------------------------------Switch 4-----------------------------------*/
 
-// Modifier les fonctions
 
 int recherche_filtre_prenom(Personne client[], Personne client_filtre[], char *critere, int *nombre_client_actuel)
 {
@@ -543,10 +542,10 @@ int recherche_filtre_prenom(Personne client[], Personne client_filtre[], char *c
 		comparaison=strstr(client[indice].prenom,critere);
 		if (comparaison!=NULL)
 		{
-			printf("Rentre dans le filtre\n");
 			nb_client_filtre++;
 			client_filtre=realloc(client_filtre,(nb_client_filtre)*sizeof(Personne));
 			ajout_dans_un_tableau(client,client_filtre,indice,indice_filtre);
+			indice_filtre++;
 		}
 		indice++;
 	}
@@ -559,10 +558,10 @@ int recherche_filtre_nom(Personne client[], Personne client_filtre[], char *crit
 {
 	int indice=0, indice_filtre=0, nb_client_filtre=0;
 	char *comparaison;
-	while ((strcmp(client[indice].nom,critere)>=0))
+	while (indice<*nombre_client_actuel)
 	{
 		comparaison=strstr(client[indice].nom,critere);
-		if (comparaison==NULL)
+		if (comparaison!=NULL)
 		{
 			nb_client_filtre++;
 			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(Personne));
@@ -578,12 +577,12 @@ int recherche_filtre_nom(Personne client[], Personne client_filtre[], char *crit
 
 int recherche_filtre_metier(Personne client[], Personne client_filtre[], char *critere, int *nombre_client_actuel)
 {
-	int indice=0, indice_filtre=0, nb_client_filtre;
+	int indice=0, indice_filtre=0, nb_client_filtre=0;
 	char *comparaison;
-	while ((strcmp(client[indice].metier,critere)>=0))
+	while (indice<*nombre_client_actuel)
 	{
 		comparaison=strstr(client[indice].metier,critere);
-		if (comparaison==NULL)
+		if (comparaison!=NULL)
 		{
 			nb_client_filtre++;
 			client_filtre=realloc(client_filtre,(nb_client_filtre+1)*sizeof(Personne));
@@ -599,7 +598,7 @@ int recherche_filtre_metier(Personne client[], Personne client_filtre[], char *c
 
 int recherche_filtre_code_postal(Personne client[], Personne client_filtre[], char *critere, int *nombre_client_actuel)
 {
-	int indice=0, indice_filtre=0, nb_client_filtre;
+	int indice=0, indice_filtre=0, nb_client_filtre=0;
 	char *comparaison;
 	while (indice<*nombre_client_actuel)
 	{
@@ -832,7 +831,7 @@ int remplissage_tableau(Personne client[taille_tableau], int *nombre_client_actu
 		    }
 		    else if(token == NULL)
 			{	
-				//ne rien faireg
+				//ne rien faire
 			}
 		    else{
 			
