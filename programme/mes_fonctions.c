@@ -5,57 +5,55 @@
 #include "mes_variables.h"
 
 //------------Algorithme de tri-------------- 
-void permuter(Personne client[], int i, int j)
-{
-    char tmp[61];
-	*tmp=*client[i].prenom; 	//permutation du prénom
-	*client[i].prenom=*client[j].prenom;
-	*client[j].prenom=*tmp;
-	*tmp=*client[i].nom;		//permutation du nom
-	*client[i].nom=*client[j].nom;
-	*client[j].nom=*tmp;
-	*tmp=*client[i].ville;		//permutation du de la ville
-	*client[i].ville=*client[j].ville;
-	*client[j].ville=*tmp;
-	*tmp=*client[i].code_postal;//permutation du code postal
-	*client[i].code_postal=*client[j].code_postal;
-	*client[j].code_postal=*tmp;
-	*tmp=*client[i].telephone;	//permutation du téléphone
-	*client[i].telephone=*client[j].telephone;
-	*client[j].telephone=*tmp;
-	*tmp=*client[i].mail;		//permutation du mail
-	*client[i].mail=*client[j].mail;
-	*client[j].mail=*tmp;
-	*tmp=*client[i].metier;		//permutation du metier
-	*client[i].metier=*client[j].metier;
-	*client[j].metier=*tmp;
 
+// le problème c'est que nlog2(n) si n=5000
+
+int permutation_element(char *element1, char *element2)
+{
+	char tmp[60];
+	strcpy(tmp,element1);
+	strcpy(element1,element2);
+	strcpy(element2,tmp);
+	return EXIT_SUCCESS;
 }
 
-void quicksort_prenom(Personne client[], int depart, int fin)
+int permuter(Personne client[], int i,int j)
+{
+    permutation_element(client[i].prenom,client[j].prenom);
+	permutation_element(client[i].nom,client[j].nom);
+	permutation_element(client[i].ville,client[j].ville);
+	permutation_element(client[i].code_postal,client[j].code_postal);
+	permutation_element(client[i].telephone,client[j].telephone);
+	permutation_element(client[i].mail,client[j].mail);
+	permutation_element(client[i].metier,client[j].metier);
+	return EXIT_SUCCESS;
+}
+
+int quicksort_prenom(Personne client[], int depart, int *fin)
 {   
 	int pivot, i, j;
-    if(depart < fin) 
+	printf("Tout marche bien ?");
+    if(depart < *fin) 
 	{
         pivot = depart;
         i = depart;
-        j = fin;
+        j = *fin;
         while (i < j) {
-            while((strcmp(client[i].prenom,client[pivot].prenom)<=0) && (i < fin))
+            while((strcmp(client[i].prenom,client[pivot].prenom)<=0) && (i < *fin))
                 i++;
-            while(strcmp(client[j].prenom,client[pivot].prenom)>0)
+            while(strcmp(client[j].prenom,client[pivot].prenom)==1)
                 j--;
             if(i < j) {
-				int tmp=j-1;
-                permuter(client,i,tmp);
+                permuter(client,i,j);
             }
 			
         }
 		int tmp=j-1;
-        permuter(client,i,tmp);
-        quicksort_prenom(client, depart, tmp);
-        quicksort_prenom(client, j, fin);
+        permuter(client,pivot,j);
+        quicksort_prenom(client, depart, &tmp);
+        quicksort_prenom(client, j+1, fin);
     }
+	return EXIT_SUCCESS;
 }
 
 int quicksort_nom(Personne client[], int depart, int *fin)
@@ -196,7 +194,7 @@ int ajout_dans_un_tableau(Personne client[], Personne tableau[],int indice_clien
 
 int insertion_personne(Personne client [],int *nombre_client_actuel)
 {
-	char nomP[46], prenomP[46], villeP[46], code_postalP[7], telephoneP[15], mailP[61], metierP[51], token[61];
+	char nomP[46], prenomP[46], villeP[46], code_postalP[7], telephoneP[15], mailP[61], metierP[51];
 	clock_t premier_temps, deuxieme_temps;
 	float temps_total;
 	(*nombre_client_actuel)++;
@@ -216,7 +214,7 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	printf("Insérez le metier \n");
     scanf("%s",metierP);
 	premier_temps=clock();
-	strcpy(client[*nombre_client_actuel].prenom,token);
+	strcpy(client[*nombre_client_actuel].prenom,prenomP);
 	strcpy(client[*nombre_client_actuel].nom,nomP);
 	strcpy(client[*nombre_client_actuel].ville,villeP);
 	strcpy(client[*nombre_client_actuel].code_postal,code_postalP);
@@ -369,8 +367,6 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 /*-----------------------------------Switch 3-----------------------------------*/
 
 /* recherche dichotomique */
-//Il faut faire arriver à la fin à retourner le milieu pour pouvoir le réutiliser après
-
 
 int recherche_dichotomique_telephone(Personne client[],Personne personne_rechercher[], char *prenomP, char *nomP, char *telP, int debut, int *fin, int *milieu)
 {	
@@ -604,8 +600,7 @@ int choisir_filtre(Personne client[],int *nombre_client_actuel)
     switch (filtre)
 	{
 		case 1:
-			quicksort_prenom(client,0,*nombre_client_actuel);
-			lecture(client,*nombre_client_actuel);
+			quicksort_prenom(client,0,nombre_client_actuel);
 			recherche_filtre_prenom(client,client_filtre,critere,nombre_client_actuel);
 			break;
 		case 2:
@@ -643,7 +638,6 @@ int affichage_client_sans_elements(Personne client[], int *nombre_client_actuel)
 		printf("rentre dans la boucle\n");
 		if ((strcmp(client[indice].prenom,&comparaison)==0) || (strcmp(client[indice].nom,&comparaison)==0) || (strcmp(client[indice].ville,&comparaison)==0) || (strcmp(client[indice].code_postal,&comparaison)==0) || (strcmp(client[indice].telephone,&comparaison)==0) || (strcmp(client[indice].mail,&comparaison)==0) || (strcmp(client[indice].metier,&comparaison)==0))
 		{
-			printf("Rentre dans la condition");
 			client_sans_elements=realloc(client_sans_elements,(nb_client_sans_element+1)*sizeof(Personne));
 			ajout_dans_un_tableau(client,client_sans_elements,indice,nb_client_sans_element);
 			nb_client_sans_element++;
@@ -696,11 +690,11 @@ int ecriture_fichier_csv(Personne client[],int nombre_client_actuel)
 		while (indice<nombre_client_actuel)
 		{	
 		    if(champ_actuel ==0 ){//nom
-				fprintf(fichier,"%s,",client[indice].nom);
+				fprintf(fichier,"%s,",client[indice].prenom);
 		    }
 		    else if(champ_actuel==1)
 	        {//prenom
-				fprintf(fichier,"%s,",client[indice].prenom);
+				fprintf(fichier,"%s,",client[indice].nom);
 		    }
 			else if(champ_actuel==2)
 	        {//ville
@@ -720,7 +714,7 @@ int ecriture_fichier_csv(Personne client[],int nombre_client_actuel)
 		    }
 	        else if(champ_actuel==6)
 	        {//metier
-		        fprintf(fichier,"%s,",client[indice].metier);
+		        fprintf(fichier,"%s",client[indice].metier);
 		    }
 			champ_actuel++;
 		}
