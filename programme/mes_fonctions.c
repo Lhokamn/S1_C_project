@@ -348,8 +348,8 @@ int critere_insertion(Personne client[],int *nombre_client_actuel)
 			scanf("%s %s %s",prenom,nom,telephone);
 			int milieu=(0+*nombre_client_actuel)/2;
 			if (recherche_dichotomique_telephone(client,personne_rechercher,prenom,nom,telephone,0,*nombre_client_actuel,&milieu)==0)
-			{
-				printf("LA fonction est ici\n");
+	{
+				printf("La fonction est ici\n");
 				modification_client(client,personne_rechercher,milieu);
 			}
 			free(personne_rechercher);
