@@ -22,6 +22,7 @@ int main(void)
 
     menu(client, &nombre_client_actuel);
     free(client);
+    printf("%i",nombre_client_actuel);
     printf("Au revoir !");
     return EXIT_SUCCESS;
 }

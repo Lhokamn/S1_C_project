@@ -223,6 +223,7 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	printf("Insérez le metier \n");
     scanf("%s",metierP);
 	premier_temps=clock();
+	client=realloc(client,(*nombre_client_actuel)*sizeof(Personne));
 	strcpy(client[*nombre_client_actuel].prenom,prenomP);
 	strcpy(client[*nombre_client_actuel].nom,nomP);
 	strcpy(client[*nombre_client_actuel].ville,villeP);
@@ -231,7 +232,6 @@ int insertion_personne(Personne client [],int *nombre_client_actuel)
 	strcpy(client[*nombre_client_actuel].mail,mailP);
 	strcpy(client[*nombre_client_actuel].metier,metierP);
 	(*nombre_client_actuel)++;
-	client=realloc(client,(*nombre_client_actuel)*sizeof(Personne));
 	deuxieme_temps=clock();
 	temps_total=(float)(deuxieme_temps-premier_temps);
 	printf("Le temps d'insertion de la personne est de : %f s\n",(temps_total/CLOCKS_PER_SEC));
@@ -274,7 +274,7 @@ int modification_client(Personne client[], Personne personne_trouve[],int milieu
 		default:
 			break;
 	}
-	ajout_dans_un_tableau(client,personne_trouve,milieu,0);
+	ajout_dans_un_tableau(personne_trouve,client,0,milieu);
 	return EXIT_SUCCESS;
 }
 
@@ -343,12 +343,13 @@ int suppression_client(Personne client[], int *milieu, int *nombre_client_actuel
 		{
 			(*nombre_client_actuel)--;
 			client=realloc(client,(*nombre_client_actuel)*sizeof(Personne));
-			return EXIT_SUCCESS;
+			fin=2;
 		}
 		Personne *client_a_decaler;
 		client_a_decaler=(Personne *)calloc(1,sizeof(Personne));
 		ajout_dans_un_tableau(client_a_decaler,client,0,i);
 		free(client_a_decaler);
+		i++;
 	}	
 	return EXIT_SUCCESS;	
 }
@@ -373,7 +374,7 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 	}
 	else
 	{
-		printf("La personne n'existe pas");
+		printf("La personne n'existe pas\n");
 	}
 	free(personne_rechercher);
 	deuxieme_temps=clock();
@@ -388,38 +389,29 @@ int critere_suppression(Personne client[],int *nombre_client_actuel)
 
 int recherche_dichotomique_telephone(Personne client[],Personne personne_rechercher[], char *prenomP, char *nomP, char *telP, int debut, int fin, int *milieu)
 {    
-	printf("Début de la recherche %i %i\n",debut,fin);
     int i,j;
     while (debut<fin)
 	{
-		printf("%i %i\n",debut,fin);
         (*milieu)=(debut+fin)/2;
-		printf("%s %s \n",client[*milieu].nom,nomP);
         if (strcmp(client[*milieu].nom,nomP)==0)
         {
-			printf("Le nom est bon\n");
             i=(*milieu), j=(*milieu);
             while ((strcmp(client[i].nom,nomP)==0) || (strcmp(client[j].nom,nomP)==0))
             {
-				printf("i=%i, j=%i\n",i,j);
-				printf("client[i]=%s,client[j]=%s\n",client[i].prenom,client[j].prenom);
                 if ((strcmp(client[i].prenom,prenomP)==0) && (strcmp(client[i].telephone,telP)==0))
                 {
                     (*milieu)=i;
 					ajout_dans_un_tableau(client,personne_rechercher,(*milieu),0);
-					printf("fonction dicho réussi\n");
             		return 0;
                 }
                 else if ((strcmp(client[j].prenom,prenomP)==0) && (strcmp(client[j].telephone,telP)==0))
                 {
                     (*milieu)=j;
 					ajout_dans_un_tableau(client,personne_rechercher,(*milieu),0);
-					printf("fonction dicho réussi\n");
             		return 0;
                 }
 				i--;
-            	j++;   
-				printf("client[i]=%s,client[j]=%s\n",client[i].nom,client[j].nom);   
+            	j++;    
             }
 			return 1;
         }
@@ -432,7 +424,6 @@ int recherche_dichotomique_telephone(Personne client[],Personne personne_recherc
             debut=(*milieu)+1;
         }
     }
-	printf("Sortie dicho\n");
     return 1;
 }
 
@@ -466,11 +457,11 @@ int recherche_dichotomique_mail(Personne client[],Personne personne_rechercher[]
 		}
 		else if (strcmp(client[milieu].nom,nomP)>0)
 		{
-			fin=(milieu)-1;
+			fin=(milieu);
 		}
 		else
 		{
-			debut=(milieu);
+			debut=(milieu)+1;
 		}
 	}
 	return EXIT_FAILURE;
@@ -726,29 +717,23 @@ int affichage(Personne client[], int *nombre_client_actuel)
 /*-----------------------------------Switch 6-----------------------------------*/
 int ecriture_fichier_csv(Personne client[],int nombre_client_actuel)
 {
-	clock_t premier_temps, deuxieme_temps;
-	float temps_total;
-	premier_temps=clock();
-	FILE *fichier = fopen(chemin,"w+");
-	int indice=0;
-	// quicksort_prenom(client,0,nombre_client_actuel);
-	while(indice<taille_tableau)
-	{
-		
-		fprintf(fichier,"%s,%s,%s,%s,%s,%s,%s",client[indice].prenom,client[indice].nom,client[indice].ville,client[indice].code_postal,client[indice].telephone,client[indice].mail,client[indice].metier);
-		indice++;	
-	}
-	while (indice<nombre_client_actuel)
-	{
-		fprintf(fichier,"\n%s,%s,%s,%s,%s,%s,%s",client[indice].prenom,client[indice].nom,client[indice].ville,client[indice].code_postal,client[indice].telephone,client[indice].mail,client[indice].metier);
-		indice++;
-	}
-	
-	fclose(fichier);
-	deuxieme_temps=clock();
-	temps_total=(float)(deuxieme_temps-premier_temps);
-	printf("Le temps de réécriture du fichier est de : %f",(temps_total/CLOCKS_PER_SEC));
-	return EXIT_SUCCESS;
+    clock_t premier_temps, deuxieme_temps;
+    float temps_total;
+    premier_temps=clock();
+    FILE *fichier = fopen(chemin,"w");
+    int indice=nombre_client_actuel;
+    quicksort_prenom(client,0,nombre_client_actuel);    
+    while (indice>0)
+    {
+        fprintf(fichier,"%s,%s,%s,%s,%s,%s,%s\n",client[indice].prenom,client[indice].nom,client[indice].ville,client[indice].code_postal,client[indice].telephone,client[indice].mail,client[indice].metier);
+        indice--;
+    }
+    
+    fclose(fichier);
+    deuxieme_temps=clock();
+    temps_total=(float)(deuxieme_temps-premier_temps);
+    printf("Le temps de réécriture du fichier est de : %f\n",(temps_total/CLOCKS_PER_SEC));
+    return EXIT_SUCCESS;
 }
 
 //----------------------------Programmes principaux----------------------------*/
@@ -793,6 +778,9 @@ int menu(Personne client[], int *nombre_client_actuel)
 
 int remplissage_tableau(Personne client[taille_tableau], int *nombre_client_actuel)
 {
+	clock_t premier_temps, deuxieme_temps;
+    float temps_total;
+	premier_temps=clock();
 	FILE *fichier = fopen(chemin,"r");
     char ligne[taille_ligne];
     char *token;
@@ -803,11 +791,11 @@ int remplissage_tableau(Personne client[taille_tableau], int *nombre_client_actu
 	    char *copie_ligne = strdup(ligne);//dupliquer la chaîne ligne avec strdup car le strsep modifie
 	                                      //le pointeur passé, et nous ne voulons pas perdre la valeur 
 									  
-		while( (token = strsep(&copie_ligne, ",")) != NULL)
+		while( (token = strsep(&copie_ligne, ",\n")) != NULL)
 	    {
 		    if(*token == '\n')
 		    {
-		    	//ne rien faire
+				//ne rien faire
 		    }
 		    else if(token == NULL)
 			{	
@@ -848,5 +836,8 @@ int remplissage_tableau(Personne client[taille_tableau], int *nombre_client_actu
 		(*nombre_client_actuel)++;	
 	}
 	fclose(fichier);
+	deuxieme_temps=clock();
+    temps_total=(float)(deuxieme_temps-premier_temps);
+    printf("Le temps de lecture et d'insertion dans un tableau est de : %f\n",(temps_total/CLOCKS_PER_SEC));
 	return EXIT_SUCCESS;
 }
